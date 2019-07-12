@@ -19,3 +19,9 @@ services:
     network_mode: "host"
     ports:
       - "8000:8000"
+
+  zipkin:
+    image: openzipkin/zipkin
+    network_mode: "host"
+    ports:
+      - "9411:9411"
