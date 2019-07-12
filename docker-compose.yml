@@ -9,6 +9,8 @@ services:
 
   linkerd:
     build: linkerd
+    depends_on: 
+      - zipkin
     network_mode: "host"
     ports:
       - "8080:8080"
@@ -23,5 +25,8 @@ services:
   zipkin:
     image: openzipkin/zipkin
     network_mode: "host"
+    environment:
+      - SCRIBE_ENABLED=true
     ports:
       - "9411:9411"
+      - "9410:9410"
