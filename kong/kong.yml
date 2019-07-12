@@ -1,0 +1,9 @@
+_format_version: "1.1"
+
+services:
+  - name: service
+    url: http://localhost:8080
+    routes:
+      - name: default
+        paths:
+          - /
