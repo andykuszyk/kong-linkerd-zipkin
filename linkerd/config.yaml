@@ -10,7 +10,6 @@ routers:
         ip: 0.0.0.0
 
 telemetry:
-  - kind: io.l5d.zipkin
-    host: localhost
-    port: 9410
-    sampleRate: 1.00
+  - kind: io.zipkin.http
+    host: localhost:9411
+    initialSampleRate: 1.00
