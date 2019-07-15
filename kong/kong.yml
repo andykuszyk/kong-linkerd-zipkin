@@ -7,3 +7,10 @@ services:
       - name: default
         paths:
           - /
+
+plugins:
+  - name: zipkin
+    service: service
+    config:
+      http_endpoint: http://localhost:9411/api/v2/spans
+      sample_ratio: 1.0
