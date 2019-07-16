@@ -3,6 +3,8 @@ _format_version: "1.1"
 services:
   - name: service
     url: http://localhost:8080
+    plugins:
+      - name: linkerd-trace-context
     routes:
       - name: default
         paths:
