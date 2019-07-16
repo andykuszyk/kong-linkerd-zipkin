@@ -25,3 +25,10 @@ curl -v localhost:8000
 ```
 
 > These requests will be routed through to `linkerd`.
+
+## Usage
+The easiest way to demonstrate this setup is to build the containers, stand them up and send a test request through to Kong. This can be done with:
+
+```
+make test
+```
