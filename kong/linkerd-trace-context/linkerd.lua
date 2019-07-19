@@ -31,15 +31,15 @@ end
 function to_bytes(data)
     bytes_string = ''
     for i = 7, 0, -1 do
-        bytes_string = bytes_string..string.char((data >> (i * 8)) & 0xFF)
+        bytes_string = bytes_string..string.char(bit.band((bit.rshift(data,(i * 8))), 0xFF))
     end
     return bytes_string
 end
 
 function from_bytes(data)
-   long = tonumber(string.byte(data, 1, 1) & 0xFF) << 56
+   long = bit.lshift(tonumber(bit.band(string.byte(data, 1, 1), 0xFF)), 56)
     for i = 2, 8 do
-        long = long | tonumber(string.byte(data, i, i) & 0xFF) << ((8 - i) * 8)
+        long = bit.bor(long, bit.lshift(tonumber(bit.band(string.byte(data, i, i), 0xFF)), ((8 - i) * 8)))
     end
     return tonumber(long)
 end

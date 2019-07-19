@@ -8,7 +8,7 @@ end
 
 function test_encode_produces_base64()
     encoded = encode(1234)
-
+    print(encoded)
     assert(encoded == 'AAAAAAAABNI=', 'encode should base64 encode the value')
 end
 
