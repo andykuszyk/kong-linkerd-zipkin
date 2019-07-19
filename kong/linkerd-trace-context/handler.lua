@@ -9,12 +9,13 @@ end
 function LinkerdTraceContextHandler:access(config)
     LinkerdTraceContextHandler.super.access(self)
 
-    spanId = get_id(kong.request.get_header("x-b3-spanid"))
-    parentId = get_id(kong.request.get_header("x-b3-parentspanid"))
-    traceId = get_id(kong.request.get_header("x-b3-traceid"))
+    span_id = get_id(kong.request.get_header("x-b3-spanid"))
+    parent_id = get_id(kong.request.get_header("x-b3-parentspanid"))
+    trace_id = get_id(kong.request.get_header("x-b3-traceid"))
+    flags = 6 
 
-header=encode(spanId)..encode(parentId)..encode(traceId)..encode(0)..encode(0)..encode(0)..encode(0)..encode(0)..encode(0)..encode(0)..encode(6)
-
+    header = build_header(span_id, parent_id, trace_id, flags)
+    
     kong.service.request.add_header("l5d-ctx-trace", enc(header))
     kong.service.request.add_header("X-foo", enc(header))
 end

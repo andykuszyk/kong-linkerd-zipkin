@@ -1,5 +1,20 @@
 local b='ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/'
 
+function hex_to_char(c)
+    return string.char(tonumber(c, 16))
+end
+
+function from_hex(str)
+    if str ~= nil then -- allow nil to pass through
+        str = str:gsub("%x%x", hex_to_char)
+    end
+    return str
+end
+
+function build_header(span_id, parent_id, trace_id, flags)
+    return enc(put64be(span_id)..put64be(parent_id)..put64be(trace_id)..put64be(flags))
+end
+
 function enc(data)
     return ((data:gsub('.', function(x) 
         local r,b='',x:byte()
@@ -12,6 +27,7 @@ function enc(data)
         return b:sub(c+1,c+1)
     end)..({ '', '==', '=' })[#data%3+1])
 end
+
 
 function dec(data)
     data = string.gsub(data, '[^'..b..'=]', '')
@@ -28,26 +44,42 @@ function dec(data)
     end))
 end
 
-function to_bytes(data)
-    bytes_string = ''
+function lshift(data, amount)
+    return bit.lshift(bit.band(data, 0xff), amount)
+end
+
+function put64be(id)
+    result = ''
     for i = 7, 0, -1 do
-        bytes_string = bytes_string..string.char(bit.band((bit.rshift(data,(i * 8))), 0xFF))
+        result = result .. string.char(bit.band(bit.rshift(id, i * 8), 0xff))
     end
-    return bytes_string
+    return result
 end
 
-function from_bytes(data)
-   long = bit.lshift(tonumber(bit.band(string.byte(data, 1, 1), 0xFF)), 56)
-    for i = 2, 8 do
-        long = bit.bor(long, bit.lshift(tonumber(bit.band(string.byte(data, i, i), 0xFF)), ((8 - i) * 8)))
+function get64be(data, index)
+    result = lshift(string.byte(data, index, index), 56)
+    for i = 1, 7 do
+        result = bit.bor(result, lshift(string.byte(data, index + i, index + i), (7 - i) * 8))
     end
-    return tonumber(long)
+    return result
 end
 
-function get_id(base64_encoded)
-    return from_bytes(dec(base64_encoded))
+function get_id(data)
+    return get64be(dec(data), 1)
 end
 
-function encode(value)
-    return enc(to_bytes(value))
+function get_span_id(data)
+    return get64be(dec(data), 1)
+end
+
+function get_parent_id(data)
+    return get64be(dec(data), 8)
+end
+
+function get_trace_id(data)
+    return get64be(dec(data), 17)
+end
+
+function get_flags(data)
+    return get64be(dec(data), 25)
 end
