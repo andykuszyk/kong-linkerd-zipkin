@@ -10,6 +10,8 @@ The approach in this repo was to use a Kong plugin to write this Linkerd header 
 ## Running the example in this repo
 The simplest way to run the example in this repo is with `make test`. This will `docker-compose up` the compose file and send a test request to Kong, which can be repeated with `make request`. Note the two headers included in the downstream request (which is printed out by the terminal service): `x-foo`, which contains the custom header, and `l5d-ctx-trace`, which is the Linkerd replacement header.
 
+Following `make test`, traces can be seen in Zipkin by visiting http://localhost:9411.
+
 ## Components
 ### "Service"
 A simple app that prints information about the request given to it.
