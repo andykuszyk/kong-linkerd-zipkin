@@ -12,6 +12,9 @@ The simplest way to run the example in this repo is with `make test`. This will 
 
 Following `make test`, traces can be seen in Zipkin by visiting http://localhost:9411.
 
+## Running the plugin tests
+The plugin for Kong which tries to recreate the Linkerd header can be found in `./kong/linkerd-trace-context/`. Most of the code is in the `linkerd.lua` file, whose accompanying tests (`linkerd_tests.lua`) need to be run with [`luajit`](http://luajit.org/), since they are not compatible with vanilla Lua.
+
 ## Components
 ### "Service"
 A simple app that prints information about the request given to it.
